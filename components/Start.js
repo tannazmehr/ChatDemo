@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, TextInput, ImageBackground } from "react-native";
 
-const Screen1 = ({ navigation }) => {
+const Start = ({ navigation }) => {
     const [name, setName] = useState('');
     const [color, setColor] = useState('#B9C6AE');
     const colors = ['#090C08', '#474056', '#8A95A5', '#B9C6AE']
@@ -24,6 +24,10 @@ const Screen1 = ({ navigation }) => {
                     <View style= {styles.colorButtonContainer}>
                         {colors.map((item, index) => (
                             <TouchableOpacity
+                                accessible={true}
+                                accessibilityLabel="More options"
+                                accessibilityHint="Choose a background color for the chat."
+                                accessibilityRole="button"
                                 key={index}
                                 style={[styles.colorButton, { backgroundColor: item },
                                     color === item && { borderWidth: 4, borderColor: '#e9e9e9'}]}
@@ -33,9 +37,13 @@ const Screen1 = ({ navigation }) => {
                     </View>
                 </View>
                 <TouchableOpacity
+                    accessible={true}
+                    accessibilityLabel="More options"
+                    accessibilityHint="Go to the chat screen"
+                    accessibilityRole="button"
                     style={styles.ChatButton}
                     title="Start Chatting"
-                    onPress={() => navigation.navigate('Screen2', { name: name, color: color })}
+                    onPress={() => navigation.navigate('Chat', { name: name, color: color })}
                     >
                         <Text style={styles.ChatButtonText}>Start Chatting</Text>
                 </TouchableOpacity>
@@ -113,4 +121,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Screen1;
+export default Start;

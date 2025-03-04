@@ -1,16 +1,65 @@
-import React, { useEffect } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View, KeyboardAvoidingView, Platform } from "react-native";
+import { Bubble, GiftedChat } from "react-native-gifted-chat";
 
-const Screen2 = ({ route, navigation }) => {
-
+const Chat = ({ route, navigation }) => {
+    const [messages, setMessages] = useState([]);
     const { name, color } = route.params;
 
     useEffect(() => {
         navigation.setOptions({ title: name });
-    }, []);
+        setMessages([
+          {
+            _id: 1,
+            text: "Hello developer",
+            createdAt: new Date(),
+            user: {
+              _id: 2,
+              name: "React Native",
+              avatar: "https://placeimg.com/140/140/any",
+            },
+          },
+          {
+            _id: 2,
+            text: 'This is a system message',
+            createdAt: new Date(),
+            system: true,
+          },
+        ]);
+      }, []);
+
+    const onSend = (newMessages) => {
+        setMessages(previousMessages => GiftedChat.append(previousMessages, newMessages))
+    }
+
+    const renderBubble = (props) => {
+        return <Bubble
+            {...props}
+            wrapperStyle={{
+            right: {
+                    backgroundColor: "#000"
+                },
+                left: {
+                    backgroundColor: "#FFF"
+                }
+            }}
+        />
+    }
+
     return (
-        <View style={[styles.container, { backgroundColor: color }]}>
-            <Text style={{ color: '#fff', fontSize: 30 }}>Hello!</Text>
+        <View style={[styles.container, { backgroundColor: color }]}
+            accessible={true}
+            accessibilityLabel="Chat Screen"
+            accessibilityHint="Shows messages"
+            >
+            <GiftedChat
+                messages={messages}
+                renderBubble={renderBubble}
+                onSend={(messages) => onSend(messages)}
+                user={{ _id: 1 }}
+            />
+            {Platform.OS === "android" ? ( <KeyboardAvoidingView behavior="height" /> ) : null}
+            {Platform.OS === "ios" ? ( <KeyboardAvoidingView behavior="padding" /> ) : null}
         </View>
     );
 }
@@ -18,9 +67,7 @@ const Screen2 = ({ route, navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
     }
 })
 
-export default Screen2;
+export default Chat;
